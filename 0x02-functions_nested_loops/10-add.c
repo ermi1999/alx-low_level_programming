@@ -2,9 +2,9 @@
 
 /**
  * add - adds two integers and returns the result
- * @a: int to be added to b
- * @b: int to be added to a
- * Return: sum of a and b
+ * @x: int to be added to y
+ * @y: int to be added to x
+ * Return: sum of x and y
  */
 
 int add(int x, int y)
