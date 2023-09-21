@@ -11,13 +11,16 @@
  */
 int sqrt_recursive(int n, int start, int end)
 {
+	int mid;
+	int square;
+
 	if (start > end)
 	{
 		return (-1); /* The number does not have a natural square root */
 	}
 
-	int mid = (start + end) / 2;
-	int square = mid * mid;
+	mid = (start + end) / 2;
+	square = mid * mid;
 
 	if (square == n)
 	{
