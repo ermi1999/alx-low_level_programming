@@ -28,7 +28,7 @@ hash_node_t *hash_node(const char *key, const char *value)
  * @ht: the hash table that is going to be updated or added.
  * @key: the key.
  * @value: the value that is going to be stored at that location.
- * Returns: 1 if it succeded 0 otherwise.
+ * Return: 1 if it succeded 0 otherwise.
  */
 int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 {
@@ -37,6 +37,8 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 	hash_node_t *new_node;
 
 	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
+		return (0);
+	if (strlen(key) == 0)
 		return (0);
 	index = key_index((const unsigned char *)key, ht->size);
 	entry = ht->array[index];
