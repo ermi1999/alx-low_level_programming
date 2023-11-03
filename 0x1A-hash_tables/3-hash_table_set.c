@@ -11,12 +11,8 @@ hash_node_t *hash_node(const char *key, const char *value)
 	hash_node_t *entry;
 
 	entry = malloc(sizeof(hash_node_t));
-	entry->key = malloc(strlen(key) + 1);
-	entry->value = malloc(strlen(value) + 1);
-
 	entry->key = strdup(key);
 	entry->value = strdup(value);
-
 	entry->next = NULL;
 
 	return (entry);
