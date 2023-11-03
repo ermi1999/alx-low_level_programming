@@ -46,12 +46,14 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 	if (entry == NULL)
 	{
 		ht->array[index] = hash_node(key, value);
+		return (1);
 	}
 	else
 	{
 		new_node = hash_node(key, value);
 		new_node->next = ht->array[index];
 		ht->array[index] = new_node;
+		return (1);
 	}
 	return (1);
 }
