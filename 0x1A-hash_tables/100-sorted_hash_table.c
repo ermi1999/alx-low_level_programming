@@ -25,6 +25,26 @@ shash_table_t *shash_table_create(unsigned long int size)
 }
 
 /**
+ * initialize_node - initializes an entry.
+ * @key: the key.
+ * @value: the value that is going to be stored at that location.
+ * Return: pointer to the entry.
+ */
+shash_node_t *initialize_node(const char *key, const char *value)
+{
+	shash_node_t *entry;
+
+	entry = malloc(sizeof(shash_node_t));
+	entry->key = strdup(key);
+	entry->value = strdup(value);
+	entry->next = NULL;
+	entry->snext = NULL;
+	entry->sprev = NULL;
+
+	return (entry);
+}
+
+/**
  * shash_table_set - adds an element to the hash table.
  * @ht: the hashtable.
  * @key: The key.
@@ -39,27 +59,15 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 
 	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
 		return (0);
-	if (strlen(key) == 0)
-		return (0);
 	index = key_index((const unsigned char *)key, ht->size);
-	entry = malloc(sizeof(shash_node_t));
-	entry->key = strdup(key);
-	entry->value = strdup(value);
-	entry->next = NULL;
-	entry->snext = NULL;
-	entry->sprev = NULL;
-	if (entry == NULL)
-		return (0);
+	entry = initialize_node(key, value);
 	if (ht->array[index] == NULL)
-	{
 		ht->array[index] = entry;
-	}
 	else
 	{
 		entry->next = ht->array[index];
 		ht->array[index] = entry;
 	}
-
 	if (ht->shead == NULL)
 	{
 		ht->shead = entry;
@@ -74,19 +82,16 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 		ht->shead = entry;
 		return (1);
 	}
+	current = ht->shead;
+	while (current->snext != NULL && strcmp(current->snext->key, key) < 0)
+		current = current->snext;
+	entry->sprev = current;
+	entry->snext = current->snext;
+	if (current->snext == NULL)
+		ht->stail = entry;
 	else
-	{
-		current = ht->shead;
-		while (current->snext != NULL && strcmp(current->snext->key, key) < 0)
-			current = current->snext;
-		entry->sprev = current;
-		entry->snext = current->snext;
-		if (current->snext == NULL)
-			ht->stail = entry;
-		else
-			current->snext->sprev = entry;
-		current->snext = entry;
-	}
+		current->snext->sprev = entry;
+	current->snext = entry;
 	return (1);
 }
 
