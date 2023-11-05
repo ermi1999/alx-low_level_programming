@@ -75,12 +75,13 @@ void default_table_set(shash_table_t *ht, shash_node_t *entry)
  */
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 {
-	unsigned long int index = key_index((const unsigned char *)key, ht->size);
+	unsigned long int index;
 	shash_node_t *entry, *temp;
 
 	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
 		return (0);
 	entry = initialize_node(key, value);
+	index = key_index((const unsigned char *)key, ht->size);
 	temp = ht->array[index];
 	while (temp != NULL)
 	{
@@ -103,7 +104,6 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 	{
 		ht->shead = entry;
 		ht->stail = entry;
-		return (1);
 	}
 	else if (strcmp(ht->shead->key, key) > 0)
 	{
@@ -111,9 +111,9 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 		entry->snext = ht->shead;
 		ht->shead->sprev = entry;
 		ht->shead = entry;
-		return (1);
 	}
-	default_table_set(ht, entry);
+	else
+		default_table_set(ht, entry);
 	return (1);
 }
 
