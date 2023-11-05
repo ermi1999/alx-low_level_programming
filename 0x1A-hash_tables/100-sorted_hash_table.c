@@ -45,6 +45,28 @@ shash_node_t *initialize_node(const char *key, const char *value)
 }
 
 /**
+ * default_table_set - handles the default set up of the table.
+ * @ht: the table.
+ * @entry: The entry that is going to be modified.
+ * Return: Nothing.
+ */
+void default_table_set(shash_table_t *ht, shash_node_t *entry)
+{
+	shash_node_t *current;
+
+	current = ht->shead;
+	while (current->snext != NULL && strcmp(current->snext->key, entry->key) < 0)
+		current = current->snext;
+	entry->sprev = current;
+	entry->snext = current->snext;
+	if (current->snext == NULL)
+		ht->stail = entry;
+	else
+		current->snext->sprev = entry;
+	current->snext = entry;
+}
+
+/**
  * shash_table_set - adds an element to the hash table.
  * @ht: the hashtable.
  * @key: The key.
@@ -53,14 +75,23 @@ shash_node_t *initialize_node(const char *key, const char *value)
  */
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 {
-	unsigned long int index;
-	shash_node_t *entry;
-	shash_node_t *current;
+	unsigned long int index = key_index((const unsigned char *)key, ht->size);
+	shash_node_t *entry, *temp;
 
 	if (ht == NULL || key == NULL || *key == '\0' || value == NULL)
 		return (0);
-	index = key_index((const unsigned char *)key, ht->size);
 	entry = initialize_node(key, value);
+	temp = ht->array[index];
+	while (temp != NULL)
+	{
+		if (strcmp(temp->key, key) == 0)
+		{
+			free(temp->value);
+			temp->value = strdup(value);
+			return (1);
+		}
+		temp = temp->next;
+	}
 	if (ht->array[index] == NULL)
 		ht->array[index] = entry;
 	else
@@ -82,16 +113,7 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 		ht->shead = entry;
 		return (1);
 	}
-	current = ht->shead;
-	while (current->snext != NULL && strcmp(current->snext->key, key) < 0)
-		current = current->snext;
-	entry->sprev = current;
-	entry->snext = current->snext;
-	if (current->snext == NULL)
-		ht->stail = entry;
-	else
-		current->snext->sprev = entry;
-	current->snext = entry;
+	default_table_set(ht, entry);
 	return (1);
 }
 
@@ -114,7 +136,8 @@ char *shash_table_get(const shash_table_t *ht, const char *key)
 		return (NULL);
 	index = key_index((unsigned char *) key, ht->size);
 	entry = ht->array[index];
-
+	while (entry != NULL && strcmp(entry->key, key) != 0)
+		entry = entry->next;
 	if (entry == NULL)
 		return (NULL);
 	return (entry->value);
