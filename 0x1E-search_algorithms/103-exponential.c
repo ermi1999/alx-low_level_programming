@@ -36,7 +36,8 @@ int binarySearch(int *array, int value, size_t start, size_t end)
 }
 
 /**
- * exponential_search - searchs for a value using exponential searching algorithm.
+ * exponential_search - searchs for a value using
+ * exponential searching algorithm.
  * @array: the array in which the value to search for.
  * @size: the size of the array.
  * @value: the value to search for.
@@ -61,5 +62,5 @@ int exponential_search(int *array, size_t size, int value)
 
 	printf("Value found between indexes [%ld] and [%ld]\n", start, end);
 
-	return binarySearch(array, value, start, end);
+	return (binarySearch(array, value, start, end));
 }
