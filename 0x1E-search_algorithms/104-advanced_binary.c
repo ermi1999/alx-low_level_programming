@@ -27,21 +27,12 @@ int solve_recursively(int *array, size_t left, size_t right, int value)
 	}
 	if (array[middle] == value)
 	{
-		if (array[middle - 1] == value)
-		{
-			i = middle;
-			while (array[i - 1] == value)
-				i--;
-			return (i);
-		}
-		else
+		if (middle == left || array[middle - 1] != value)
 			return (middle);
 	}
-	else if (array[middle] < value)
-		left = middle + 1;
-	else
-		right = middle - 1;
-	return (solve_recursively(array, left, right, value));
+	if (array[middle] >= value)
+		return (solve_recursively(array, left, middle, value));
+	return (solve_recursively(array, middle + 1, right, value));
 }
 
 
