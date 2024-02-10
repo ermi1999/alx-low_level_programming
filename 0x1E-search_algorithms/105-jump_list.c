@@ -5,6 +5,7 @@
  * jump_list - implements a jump search in a linked list.
  * @list: the list in which the value to be searched in.
  * @value: the value to search.
+ * @size: the size of the list.
  * Return: the index of the value.
  */
 listint_t *jump_list(listint_t *list, size_t size, int value)
